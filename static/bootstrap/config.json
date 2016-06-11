@@ -389,6 +389,7 @@
     "forms.less",
     "buttons.less",
     "responsive-utilities.less",
+    "glyphicons.less",
     "navs.less",
     "navbar.less",
     "alerts.less",
@@ -406,5 +407,5 @@
     "tooltip.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=fe175003b7e0d337399d272a0710bd54"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=207218cb9301fa45e072704dbaa0b87e"
 }
