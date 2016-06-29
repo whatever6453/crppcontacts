@@ -47,7 +47,7 @@ function toTitleCase(str) {
 			ajax: {
 				create: {
 					type: 'POST',
-					url: '/contacts/v1/contacts/',
+					url: '/contacts/v1/contacts',
 				},
 				edit: {
 					type: 'PUT',
@@ -63,7 +63,7 @@ function toTitleCase(str) {
 		});
 		$('#contactsTable').DataTable({
 			ajax: {
-				url: '/contacts/v1/contacts/',
+				url: '/contacts/v1/contacts',
 				dataSrc: ''
 			},
 			dom: 'Bfrtip',

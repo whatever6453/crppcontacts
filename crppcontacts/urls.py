@@ -4,9 +4,9 @@ from rest_framework import routers
 from crppcontacts import views
 
 base_url = 'v1'
-router = routers.DefaultRouter()
-router.register(base_url + r'/contacts', views.ContactViewSet)
-router.register(base_url + r'/tags', views.TagViewSet)
+router = routers.SimpleRouter(trailing_slash=False)
+router.register(base_url + r'/contacts(/)?', views.ContactViewSet)
+router.register(base_url + r'/tags(/)?', views.TagViewSet)
 
 urlpatterns = patterns('',
     # Examples:
