@@ -49,7 +49,7 @@ function toTitleCase(str) {
 				switch(oldData.action) {
 				case 'create':
 					method = 'POST';
-					url = '/contacts/v1/contacts';
+					url = '/api/v1/contacts';
 					data = {};
 					for (prop in oldData.data[0]) {
 						data[prop] = oldData.data[0][prop];
@@ -68,7 +68,7 @@ function toTitleCase(str) {
 					break;
 				case 'remove':
 					method = 'DELETE';
-					url = '/contacts/v1/contacts/TODO';
+					url = '/api/v1/contacts/TODO';
 					break;
 				default:
 					console.log("Unrecognised action '" + data.action + "'");
@@ -96,7 +96,7 @@ function toTitleCase(str) {
 		});
 		$('#contactsTable').DataTable({
 			ajax: {
-				url: '/contacts/v1/contacts',
+				url: '/api/v1/contacts',
 				dataSrc: ''
 			},
 			dom: 'Bfrtip',
