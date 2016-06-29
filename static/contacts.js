@@ -44,22 +44,55 @@ function toTitleCase(str) {
 			};
 		});
 		var editor = new $.fn.dataTable.Editor({
-			ajax: {
-				create: {
-					type: 'POST',
-					url: '/contacts/v1/contacts',
-				},
-				edit: {
-					type: 'PUT',
-					url: '/contacts/v1/contacts/_id_'
-				},
-				remove: {
-					type: 'DELETE',
-					url: '/contacts/v1/contacts/_id_'
+			ajax: function (method, url, oldData, success, error) {
+				var data;
+				switch(oldData.action) {
+				case 'create':
+					method = 'POST';
+					url = '/contacts/v1/contacts';
+					data = {};
+					for (prop in oldData.data[0]) {
+						data[prop] = oldData.data[0][prop];
+					}
+					break;
+				case 'edit':
+					method = 'PUT';
+					data = {};
+					for (prop in oldData.data) {
+						url = prop;
+						for (subprop in oldData.data[prop]) {
+							data[subprop] = oldData.data[prop][subprop];
+						}
+						break;
+					}
+					break;
+				case 'remove':
+					method = 'DELETE';
+					url = '/contacts/v1/contacts/TODO';
+					break;
+				default:
+					console.log("Unrecognised action '" + data.action + "'");
+					break;
 				}
+				console.log(method + ' ' + url + ' ' + JSON.stringify(data));
+				$.ajax({
+					type: method,
+					url: url,
+					data: data ? JSON.stringify(data) : undefined,
+					contentType: "application/json",
+					dataType: "json",
+					processData: false,
+					success: function(json) {
+						success(json);
+					},
+					error: function(xhr, err, thrown) {
+						error(xhr, err, thrown);
+					}
+				});
 			},
 			table: '#contactsTable',
-			fields: editorColumns
+			fields: editorColumns,
+			idSrc: 'url'
 		});
 		$('#contactsTable').DataTable({
 			ajax: {
@@ -70,6 +103,7 @@ function toTitleCase(str) {
 			deferRender: true,
 			columns: tableColumns,
 			select: true,
+			idSrc: 'url',
 			buttons: [
 				{ extend: 'create', editor: editor },
 				{ extend: 'edit',   editor: editor },
