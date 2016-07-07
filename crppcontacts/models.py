@@ -6,11 +6,6 @@ class Common(django.db.models.Model):
     """
     Abstract class for common attributes and behaviour
     """
-    name = django.db.models.CharField(max_length=200, unique=True)
-    # ...
-    def __unicode__(self):  # Python 3: def __str__(self):
-        return self.name
-
     class Meta:
         abstract = True
 
@@ -19,13 +14,15 @@ class Tag(Common):
     """
     Represents a TAG to categorize contacts
     """
+    name = django.db.models.CharField('Tag name', max_length=50, null=False, blank=False)
+    def __unicode__(self):  # Python 3: def __str__(self):
+        return self.name
 
 
 class Contact(Common):
     """
     Represents a contact
     """
-    #name = django.db.models.CharField(max_length=200, null=True, blank=True)
     first_name = django.db.models.CharField('First name', max_length=50, null=True, blank=True)
     last_name = django.db.models.CharField('Last name', max_length=100, null=True, blank=True)
     organization = django.db.models.CharField('Organization', max_length=200, null=True, blank=True)
@@ -43,4 +40,5 @@ class Contact(Common):
     zip_code = django.db.models.CharField('Zip code', max_length=50, null=True, blank=True)
     website = django.db.models.CharField('Web site URL', max_length=200, null=True, blank=True)
     tags = django.db.models.ManyToManyField(Tag)
-
+    def __unicode__(self):  # Python 3: def __str__(self):
+        return self.first_name + ' ' + self.last_name

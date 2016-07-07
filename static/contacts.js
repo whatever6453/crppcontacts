@@ -31,18 +31,18 @@ function toTitleCase(str) {
 				title: toTitleCase(columnName)
 			};
 		});
-		tableColumns.concat(
-			// Combine the first and last names into a single table field
-			{ data: null, render: function(data, type, row) {
-				return data.first_name+' '+data.last_name;
-			}}
-		);
 		editorColumns = $.map(columnNames, function(columnName, index) {
 			return {
 				name: columnName,
 				label: toTitleCase(columnName)
 			};
 		});
+		tableColumns.unshift(
+			// Combine the first and last names into a single table field
+			{ data: null, title: "Name", render: function(data, type, row) {
+				return row.first_name + ' ' + row.last_name;
+			}}
+		);
 		var editor = new $.fn.dataTable.Editor({
 			ajax: function (method, url, oldData, success, error) {
 				var data;
