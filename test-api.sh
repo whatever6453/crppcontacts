@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 curl --verbose -H "Accept:application/json" http://contacts/api/v1/contacts
 
