@@ -97,7 +97,7 @@ function toTitleCase(str) {
 		$('#contactsTable').DataTable({
 			ajax: {
 				url: '/api/v1/contacts',
-				dataSrc: ''
+				dataSrc: 'results'
 			},
 			dom: 'Bfrtip',
 			deferRender: true,
