@@ -37,5 +37,7 @@ db.sqlite3
 # exclude .rtf files
 *.rtf*
 
-
+# exclude Eclipse project metainformation files
+.project
+.pydevproject
 
