@@ -12,7 +12,7 @@ admin.site.register(crppcontacts.models.Tag, TagAdmin)
 
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'organization', 'email1', 'telephone', 'mobile1')
+    list_display = ('first_name', 'last_name', 'organization', 'email1', 'telephone', 'mobile1')
     list_filter = ('tags', 'organization', 'first_name', 'last_name')
     fieldsets = (
         (None, {
