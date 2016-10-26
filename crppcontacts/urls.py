@@ -9,10 +9,6 @@ router.register(base_url + r'/contacts(/)?', views.ContactViewSet)
 router.register(base_url + r'/tags(/)?', views.TagViewSet)
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'crppcontacts.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/', 'crppcontacts.views.index', name='index')
