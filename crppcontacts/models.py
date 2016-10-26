@@ -1,15 +1,7 @@
 from django.db import models
 
 
-class Common(models.Model):
-    """
-    Abstract class for common attributes and behaviour
-    """
-    class Meta:
-        abstract = True
-
-
-class Tag(Common):
+class Tag(models.Model):
     """
     Represents a TAG to categorize contacts
     """
@@ -19,7 +11,7 @@ class Tag(Common):
         return self.name
 
 
-class Contact(Common):
+class Contact(models.Model):
     """
     Represents a contact
     """
