@@ -14,6 +14,7 @@ class Tag(Common):
     Represents a TAG to categorize contacts
     """
     name = models.CharField('Tag name', max_length=50, null=False, blank=False)
+
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.name
 
@@ -39,5 +40,6 @@ class Contact(Common):
     zip_code = models.CharField('Zip code', max_length=50, null=True, blank=True)
     website = models.CharField('Web site URL', max_length=200, null=True, blank=True)
     tags = models.ManyToManyField(Tag)
+
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.first_name + ' ' + self.last_name
