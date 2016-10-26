@@ -135,7 +135,13 @@ function toTitleCase(str) {
 			buttons: [
 				{ extend: 'create', editor: editor },
 				{ extend: 'edit',   editor: editor },
-				{ extend: 'remove', editor: editor }
+				{ extend: 'remove', editor: editor },
+				'copy', 'csv'
+				// TODO: Depends on JSZip, not currently installed
+				// 'pdf'
+				// TODO: Depends on DataTables print view plugin,
+				// not currently installed
+				// 'print'
 			]
 		});
 	});
