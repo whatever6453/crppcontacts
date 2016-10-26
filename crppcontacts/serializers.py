@@ -1,9 +1,14 @@
 from crppcontacts.models import Contact, Tag
 from rest_framework import serializers
 
-class ContactSerializer(serializers.HyperlinkedModelSerializer):
-    tags = serializers.HyperlinkedRelatedField(
-        many=True, view_name='tag-detail', read_only=False,
+
+class ContactSerializer(serializers.ModelSerializer):
+    tags = serializers.SlugRelatedField(
+        required=False,
+        many=True,
+        slug_field='name',
+        allow_null=True,
+        read_only=False,
         queryset=Tag.objects.all()
     )
 
@@ -11,7 +16,8 @@ class ContactSerializer(serializers.HyperlinkedModelSerializer):
         model = Contact
         fields = ( '__all__' )
 
-class TagSerializer(serializers.HyperlinkedModelSerializer):
+
+class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag

@@ -7,8 +7,6 @@ function toTitleCase(str) {
 (function($) {
 	$(function() {
 		var columnNames = [
-			'first_name',
-			'last_name',
 			'organization',
 			'position',
 			'department',
@@ -37,62 +35,92 @@ function toTitleCase(str) {
 				label: toTitleCase(columnName)
 			};
 		});
+		editorColumns.unshift({
+			name: 'last_name',
+			label: toTitleCase('last_name')
+		});
+		editorColumns.unshift({
+			name: 'first_name',
+			label: toTitleCase('first_name')
+		});
 		tableColumns.unshift(
 			// Combine the first and last names into a single table field
 			{ data: null, title: "Name", render: function(data, type, row) {
 				return row.first_name + ' ' + row.last_name;
 			}}
 		);
+		tableColumns.push(
+			// Join the tag names into a comma-separated list
+			{ data: "tags", title: "Tags", render: function(data, type, row) {
+				return data.join(', ');
+			}}
+		);
+		/**
+		 * Convert from DataTables' pseudo-RESTful API
+		 * to Django REST framework's pseudo-RESTful API.
+		 * @param originalData The data in DataTables Editor JSON format
+		 * @param newData The data in Django REST Framework's JSON format
+		 * @returns The primary key of the entity to operate on
+		 */
+		function DataTablesToDRF(dtdata, drfdata) {
+			var pk;
+			if (Object.keys(dtdata.data).length > 1) {
+				throw "Cannot operate on more than one entity at a time";
+			}
+			for (pk in dtdata.data) {
+				$.extend(drfdata, dtdata.data[pk]);
+				return pk;
+			}
+			return undefined;
+		}
+		/**
+		 * Convert from Django REST framework's pseudo-RESTful API
+		 * to DataTables' pseudo-RESTful API.
+		 * @param json The data in Django REST Framework's JSON format
+		 */
+		function DRFToDataTables(drfdata, dtdata) {
+			dtdata.data = [ drfdata ];
+		}
 		var editor = new $.fn.dataTable.Editor({
 			ajax: function (method, url, oldData, success, error) {
-				var data;
-				switch(oldData.action) {
+				var data = {}, pk;
+				pk = DataTablesToDRF(oldData, data);
+				url = '/api/v1/contacts/';
+				switch (oldData.action) {
 				case 'create':
 					method = 'POST';
-					url = '/api/v1/contacts';
-					data = {};
-					for (prop in oldData.data[0]) {
-						data[prop] = oldData.data[0][prop];
-					}
 					break;
 				case 'edit':
 					method = 'PUT';
-					data = {};
-					for (prop in oldData.data) {
-						url = prop;
-						for (subprop in oldData.data[prop]) {
-							data[subprop] = oldData.data[prop][subprop];
-						}
-						break;
-					}
+					url += pk;
 					break;
 				case 'remove':
 					method = 'DELETE';
-					url = '/api/v1/contacts/TODO';
+					url += pk;
 					break;
 				default:
 					console.log("Unrecognised action '" + data.action + "'");
-					break;
+					error("Unrecognised action '" + data.action + "'");
+					return;
 				}
-				console.log(method + ' ' + url + ' ' + JSON.stringify(data));
-				$.ajax({
+				return $.ajax({
 					type: method,
 					url: url,
 					data: data ? JSON.stringify(data) : undefined,
 					contentType: "application/json",
 					dataType: "json",
 					processData: false,
-					success: function(json) {
-						success(json);
+					success: function(response) {
+						var editorData = {};
+						DRFToDataTables(response, editorData);
+						return success(editorData);
 					},
-					error: function(xhr, err, thrown) {
-						error(xhr, err, thrown);
-					}
+					error: error
 				});
 			},
 			table: '#contactsTable',
 			fields: editorColumns,
-			idSrc: 'url'
+			idSrc: 'id'
 		});
 		$('#contactsTable').DataTable({
 			ajax: {
@@ -103,7 +131,7 @@ function toTitleCase(str) {
 			deferRender: true,
 			columns: tableColumns,
 			select: true,
-			idSrc: 'url',
+			idSrc: 'id',
 			buttons: [
 				{ extend: 'create', editor: editor },
 				{ extend: 'edit',   editor: editor },
