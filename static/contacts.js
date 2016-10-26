@@ -1,10 +1,4 @@
-function toTitleCase(str) {
-	return str.replace(/[^a-zA-Z0-9 ]/, ' ')
-	.replace(/\w\S*/g, function(txt) {
-		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-	});
-}
-var RESTfulEditor = function(entityName, columns) {
+var RESTfulEditor = function(tableElement, entityName, columns) {
 	var editor = this, opts = {
 		ajax: function (method, url, oldData, success, error) {
 			var data = {}, pk;
@@ -42,7 +36,7 @@ var RESTfulEditor = function(entityName, columns) {
 				error: error
 			});
 		},
-		table: '#' + entityName + 'Table',
+		table: tableElement,
 		fields: columns,
 		idSrc: 'id'
 	};
@@ -77,6 +71,13 @@ $.extend(RESTfulEditor.prototype, {
 		dtedata.data = [ drfdata ];
 	}
 });
+
+function toTitleCase(str) {
+	return str.replace(/[^a-zA-Z0-9 ]/, ' ')
+	.replace(/\w\S*/g, function(txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
+}
 
 (function($) {
 	$(function() {
@@ -129,8 +130,9 @@ $.extend(RESTfulEditor.prototype, {
 				return data.join(', ');
 			}}
 		);
-		var editor = new RESTfulEditor('contacts', editorColumns);
-		$('#contactsTable').DataTable({
+		var contactsTable = $('#contactsTable');
+		var editor = new RESTfulEditor(contactsTable, 'contacts', editorColumns);
+		contactsTable.DataTable({
 			ajax: {
 				url: '/api/v1/contacts',
 				dataSrc: 'results'
